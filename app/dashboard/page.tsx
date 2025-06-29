@@ -1,105 +1,87 @@
-import { getServerSession } from "next-auth/next"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-import { redirect } from "next/navigation"
-import { prisma } from "@/lib/db"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { PlusCircle } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Home, BarChart, PieChart, LineChart } from "lucide-react";
+import Link from "next/link";
 
-type ReminderWithLead = {
-  id: string;
-  note: string;
-  reminderDate: Date;
-  lead: {
-    id: string;
-    name: string | null;
-  };
-};
-
-export default async function DashboardPage() {
-  // const session = await getServerSession(authOptions)
-  // if (!session || !session.user?.agencyId) {
-  //   redirect("/login")
-  // }
-
-  const agencyId = "clv2b24ap00001099qx9m5x4z" //
-  // const { agencyId } = session.user
-
-  const propertyCount = 5;
-  const leadCount = 12;
-  const reminderCount = 3;
-
-  const todaysReminders: ReminderWithLead[] = [
-    {
-      id: "rem1",
-      note: "Follow up with Anjali about Indiranagar property.",
-      reminderDate: new Date(),
-      lead: { id: "lead1", name: "Anjali Singh" },
-    },
-    {
-      id: "rem2",
-      note: "Schedule visit for Vikram to see Koramangala flat.",
-      reminderDate: new Date(),
-      lead: { id: "lead2", name: "Vikram Patel" },
-    },
-    {
-      id: "rem3",
-      note: "Send new villa pictures to Priya.",
-      reminderDate: new Date(),
-      lead: { id: "lead3", name: "Priya Kumar" },
-    }
-  ];
-
+export default function DashboardPage() {
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      
-      <div className="grid gap-4 md:grid-cols-3 mb-6">
-        <div className="p-4 border rounded-lg">
-          <h3 className="text-lg font-semibold">Active Properties</h3>
-          <p className="text-3xl font-bold">{propertyCount}</p>
-        </div>
-        <div className="p-4 border rounded-lg">
-          <h3 className="text-lg font-semibold">Active Leads</h3>
-          <p className="text-3xl font-bold">{leadCount}</p>
-        </div>
-        <div className="p-4 border rounded-lg">
-          <h3 className="text-lg font-semibold">Today's Reminders</h3>
-          <p className="text-3xl font-bold">{reminderCount}</p>
-        </div>
-      </div>
-
-      <div className="flex gap-4 mb-6">
-        <Button asChild>
-            <Link href="/properties/new">
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Property
-            </Link>
-        </Button>
-        <Button asChild>
-            <Link href="/leads/new">
-                <PlusCircle className="mr-2 h-4 w-4" /> Add Lead
-            </Link>
-        </Button>
-      </div>
-
-      <div>
-        <h2 className="text-xl font-bold mb-3">Today's Tasks</h2>
-        {todaysReminders.length > 0 ? (
-          <div className="space-y-3">
-            {(todaysReminders as ReminderWithLead[]).map((reminder) => (
-              <Link href={`/leads/${reminder.lead.id}`} key={reminder.id} className="block p-3 border rounded-lg bg-gray-50 hover:bg-gray-100">
-                <p className="font-semibold">{reminder.lead.name}</p>
-                <p className="my-1">{reminder.note}</p>
-                <p className="text-xs text-muted-foreground">
-                  {new Date(reminder.reminderDate).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}
-                </p>
-              </Link>
-            ))}
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-purple-800 text-white shadow-md">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center">
+              <Home className="h-6 w-6 mr-2" />
+              <h1 className="text-xl font-bold">BrokerBoard</h1>
+            </div>
+            <nav className="hidden md:flex space-x-4">
+              <Link href="/dashboard" className="px-3 py-2 rounded-md text-sm font-medium bg-purple-700">Home</Link>
+              <Link href="/properties" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-purple-700">Listings Management</Link>
+              <Link href="/leads" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-purple-700">Leads Dashboard</Link>
+              <Link href="/follow-ups" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-purple-700">Follow-ups Tracker</Link>
+              <Link href="#" className="px-3 py-2 rounded-md text-sm font-medium hover:bg-purple-700">Settings</Link>
+            </nav>
           </div>
-        ) : (
-          <p>No tasks for today. Enjoy your day!</p>
-        )}
-      </div>
+        </div>
+      </header>
+      
+      <main className="container mx-auto p-4 sm:p-6 lg:p-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+          {/* Total Listings Card */}
+          <div className="bg-gray-200 p-6 rounded-2xl shadow">
+            <h2 className="text-lg font-semibold text-gray-700">Total Listings</h2>
+            <p className="text-4xl font-bold mt-2">120</p>
+            <div className="mt-4 h-24 flex items-end">
+              {/* Bar chart placeholder */}
+              <div className="w-full h-full flex items-end justify-between">
+                <div className="bg-purple-500 w-1/5 h-1/3 rounded-t-sm"></div>
+                <div className="bg-purple-500 w-1/5 h-3/4 rounded-t-sm"></div>
+                <div className="bg-purple-500 w-1/5 h-1/2 rounded-t-sm"></div>
+                <div className="bg-purple-500 w-1/5 h-5/6 rounded-t-sm"></div>
+                <div className="bg-purple-500 w-1/5 h-2/3 rounded-t-sm"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Active Leads Card */}
+          <div className="bg-purple-600 text-white p-6 rounded-2xl shadow">
+            <h2 className="text-lg font-semibold">Active Leads</h2>
+            <p className="text-4xl font-bold mt-2">45</p>
+            <div className="mt-4 h-24 flex items-center justify-center">
+              {/* Pie chart placeholder */}
+              <div className="w-24 h-24 rounded-full border-8 border-purple-400 border-t-purple-200 animate-spin"></div>
+            </div>
+          </div>
+
+          {/* Follow-ups Card */}
+          <div className="bg-purple-100 p-6 rounded-2xl shadow">
+            <h2 className="text-lg font-semibold text-gray-700">Follow-ups</h2>
+            <p className="text-4xl font-bold mt-2">30</p>
+            <div className="mt-4 h-24 flex items-end">
+              {/* Line chart placeholder */}
+              <svg className="w-full h-full" fill="none" stroke="currentColor" viewBox="0 0 200 60" preserveAspectRatio="none">
+                <path strokeWidth="2" className="text-purple-500" d="M 0 45 L 20 40 L 40 50 L 60 30 L 80 45 L 100 35 L 120 42 L 140 55 L 160 58 L 180 55 L 200 60" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex gap-4">
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+              New Listing
+            </Button>
+            <Button className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg">
+              New Lead
+            </Button>
+          </div>
+          <div className="flex-grow flex items-center mt-4 sm:mt-0">
+            <Input type="search" placeholder="Search for listings or leads" className="flex-grow rounded-r-none"/>
+            <Button type="submit" className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-l-none rounded-r-lg">
+              Search
+            </Button>
+          </div>
+        </div>
+      </main>
     </div>
   )
 } 
