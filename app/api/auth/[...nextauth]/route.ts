@@ -6,7 +6,7 @@ import GoogleProvider from "next-auth/providers/google"
 
 // const prisma = new PrismaClient() // This is now in lib/db.ts
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     // Add providers here (e.g., Google, Email)
